@@ -161,6 +161,47 @@
   line-height: 1.6;
 }
 
+/* ── Barra de progreso ───────────────────────────────────────────────────────── */
+.progress-track {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: rgba(255, 255, 255, 0.08);
+  z-index: 5;
+  overflow: hidden;
+}
+
+.progress-bar {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(to right, var(--color-accent-blue), #60a5fa);
+  border-radius: 0 2px 2px 0;
+  animation: carousel-progress 4s linear forwards;
+}
+
+/* Estado pausado: barra sutil sin animación */
+.progress-bar--paused {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.12);
+  animation: none;
+}
+
+@keyframes carousel-progress {
+  from { width: 0%; }
+  to   { width: 100%; }
+}
+
+/* Badge "pausado" en el contador */
+.pause-badge {
+  font-size: 0.7rem;
+  color: var(--color-text-muted);
+  opacity: 0.6;
+  letter-spacing: 0;
+}
+
+
 /* ── Controles del carousel ─────────────────────────────────────────────────── */
 .carousel-controls {
   display: flex;

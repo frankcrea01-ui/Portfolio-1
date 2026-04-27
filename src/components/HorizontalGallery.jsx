@@ -20,19 +20,51 @@ function useIsMobile(breakpoint = 768) {
 
 // ── Componente Carousel Móvil ─────────────────────────────────────────────────
 const MobileCarousel = () => {
-  const [current, setCurrent] = useState(0);
-  const touchStartX = useRef(null);
+  const [current, setCurrent]       = useState(0);
+  const [progressKey, setProgressKey] = useState(0); // cambiar la key reinicia la animación CSS
+  const [isPaused, setIsPaused]     = useState(false);
+  const touchStartX  = useRef(null);
+  const pauseTimerRef = useRef(null);
   const total = projects.length;
 
-  const prev = () => setCurrent(i => (i - 1 + total) % total);
-  const next = useCallback(() => setCurrent(i => (i + 1) % total), [total]);
+  const AUTO_DELAY   = 4000; // ms entre cambios automáticos
+  const PAUSE_AFTER  = 6000; // ms de pausa tras interacción del usuario
 
-  // Swipe táctil
+  // ── Función central de navegación ─────────────────────────────────────────
+  const goTo = useCallback((newIdx, isUser = false) => {
+    setCurrent(((newIdx % total) + total) % total);
+    setProgressKey(k => k + 1); // reinicia la barra de progreso
+
+    if (isUser) {
+      setIsPaused(true);
+      clearTimeout(pauseTimerRef.current);
+      pauseTimerRef.current = setTimeout(() => setIsPaused(false), PAUSE_AFTER);
+    }
+  }, [total]);
+
+  // ── Auto-avance: se activa cuando current cambia y NO está pausado ─────────
+  useEffect(() => {
+    if (isPaused) return; // respeta la ventana de pausa
+    const timer = setTimeout(() => {
+      setCurrent(i => (i + 1) % total);
+      setProgressKey(k => k + 1);
+    }, AUTO_DELAY);
+    return () => clearTimeout(timer);
+  }, [current, isPaused, total]);
+
+  // Limpiar timer al desmontar
+  useEffect(() => () => clearTimeout(pauseTimerRef.current), []);
+
+  // ── Atajos de navegación ───────────────────────────────────────────────────
+  const prev = () => goTo(current - 1, true);
+  const next = () => goTo(current + 1, true);
+
+  // ── Swipe táctil ──────────────────────────────────────────────────────────
   const onTouchStart = (e) => { touchStartX.current = e.touches[0].clientX; };
   const onTouchEnd   = (e) => {
     if (touchStartX.current === null) return;
     const delta = touchStartX.current - e.changedTouches[0].clientX;
-    if (Math.abs(delta) > 40) delta > 0 ? next() : prev();
+    if (Math.abs(delta) > 40) goTo(delta > 0 ? current + 1 : current - 1, true);
     touchStartX.current = null;
   };
 
@@ -44,6 +76,17 @@ const MobileCarousel = () => {
     >
       {/* Tarjeta activa */}
       <div className="mobile-card">
+
+        {/* Barra de progreso — vive en la parte superior de la tarjeta */}
+        <div className="progress-track" aria-hidden="true">
+          {!isPaused && (
+            <div key={progressKey} className="progress-bar" />
+          )}
+          {isPaused && (
+            <div className="progress-bar progress-bar--paused" />
+          )}
+        </div>
+
         <img
           src={projects[current].image}
           alt={projects[current].title}
@@ -72,7 +115,7 @@ const MobileCarousel = () => {
             <button
               key={i}
               className={`dot ${i === current ? 'dot--active' : ''}`}
-              onClick={() => setCurrent(i)}
+              onClick={() => goTo(i, true)}
               aria-label={`Ir a proyecto ${i + 1}`}
             />
           ))}
@@ -88,11 +131,15 @@ const MobileCarousel = () => {
         </button>
       </div>
 
-      {/* Contador */}
-      <p className="carousel-counter">{current + 1} / {total}</p>
+      {/* Contador + estado de pausa */}
+      <p className="carousel-counter">
+        {current + 1} / {total}
+        {isPaused && <span className="pause-badge"> · pausado</span>}
+      </p>
     </div>
   );
 };
+
 
 // ── Componente Galería Desktop (GSAP marquee + flechas) ──────────────────────
 const DesktopGallery = () => {
