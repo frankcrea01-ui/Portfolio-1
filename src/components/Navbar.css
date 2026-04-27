@@ -3,10 +3,9 @@
   top: 0;
   left: 0;
   width: 100%;
-  padding: 1.5rem 0;
   z-index: 100;
-  background: rgba(10, 10, 10, 0.85);
-  backdrop-filter: blur(10px);
+  background: rgba(10, 10, 10, 0.92);
+  backdrop-filter: blur(12px);
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
@@ -14,19 +13,22 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding: 1.25rem 2rem;
 }
 
 .logo {
-  font-size: 1.5rem;
+  font-size: 1.1rem;
   font-weight: 800;
-  letter-spacing: 2px;
+  letter-spacing: 1.5px;
+  white-space: nowrap;
 }
 
 .highlight {
   color: var(--color-accent-blue);
 }
 
-.nav-links {
+/* ── Desktop nav ─────────────────────────────────────────── */
+.desktop-nav {
   display: flex;
   list-style: none;
   gap: 2rem;
@@ -34,7 +36,7 @@
 }
 
 .nav-links a {
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 1px;
@@ -47,13 +49,106 @@
 }
 
 .btn-contact {
-  background-color: var(--color-accent-blue);
+  background-color: var(--color-accent-blue) !important;
   color: var(--color-text) !important;
-  padding: 0.6rem 1.5rem;
+  padding: 0.55rem 1.4rem;
   border-radius: 4px;
   transition: background-color 0.3s ease !important;
 }
 
 .btn-contact:hover {
   background-color: #2563eb !important;
+}
+
+/* ── Hamburger ───────────────────────────────────────────── */
+.hamburger {
+  display: none;           /* oculto en desktop */
+  flex-direction: column;
+  gap: 5px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 6px;
+  z-index: 110;
+}
+
+.hamburger span {
+  display: block;
+  width: 26px;
+  height: 2px;
+  background-color: var(--color-text);
+  border-radius: 2px;
+  transition: transform 0.35s ease, opacity 0.35s ease;
+  transform-origin: center;
+}
+
+/* Animación X cuando está abierto */
+.hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+.hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+/* ── Mobile dropdown ─────────────────────────────────────── */
+.mobile-menu {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s ease, padding 0.3s ease;
+  background: rgba(10, 10, 10, 0.97);
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.mobile-menu--open {
+  max-height: 300px;
+  padding: 1rem 0;
+}
+
+.mobile-nav-links {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+}
+
+.mobile-nav-links li {
+  width: 100%;
+  text-align: center;
+}
+
+.mobile-nav-links a {
+  display: block;
+  padding: 1rem 2rem;
+  font-size: 1rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--color-text-muted);
+  transition: color 0.3s ease, background 0.3s ease;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.mobile-nav-links a:hover {
+  color: var(--color-text);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.btn-contact-mobile {
+  color: var(--color-accent-blue) !important;
+  border-bottom: none !important;
+  font-weight: 700 !important;
+}
+
+/* ── Responsive breakpoint ───────────────────────────────── */
+@media (max-width: 768px) {
+  .desktop-nav {
+    display: none;
+  }
+
+  .hamburger {
+    display: flex;
+  }
+
+  .logo {
+    font-size: 0.85rem;
+    letter-spacing: 0.5px;
+  }
 }
