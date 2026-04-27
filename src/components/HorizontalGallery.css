@@ -14,6 +14,41 @@
 }
 
 /* ── Desktop: Marquee GSAP ──────────────────────────────────────────────────── */
+
+/* Contenedor relativo para posicionar las flechas sobre el viewport */
+.desktop-gallery-wrapper {
+  position: relative;
+}
+
+/* Flechas desktop: flotantes, centradas verticalmente */
+.desktop-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(10, 10, 10, 0.72);
+  backdrop-filter: blur(8px);
+  color: var(--color-text);
+  cursor: pointer;
+  transition: background 0.3s ease, border-color 0.3s ease, transform 0.25s ease;
+}
+
+.desktop-arrow:hover {
+  background: var(--color-accent-blue);
+  border-color: var(--color-accent-blue);
+  transform: translateY(-50%) scale(1.1);
+}
+
+.desktop-arrow--left  { left: 1.25rem; }
+.desktop-arrow--right { right: 1.25rem; }
+
 .gallery-viewport {
   width: 100%;
   overflow: hidden;

@@ -94,22 +94,36 @@ const MobileCarousel = () => {
   );
 };
 
-// ── Componente Galería Desktop (GSAP marquee) ─────────────────────────────────
+// ── Componente Galería Desktop (GSAP marquee + flechas) ──────────────────────
 const DesktopGallery = () => {
   const containerRef = useRef();
   const trackRef     = useRef();
+  const tweenRef     = useRef(null);
+
+  // Duración equivalente a un card en el tween (4 cards duplicados = 8 items)
+  const CARD_DURATION = 30 / (projects.length * 2);
+
+  // Avanzar o retroceder el tween sin detenerlo
+  const skip = (dir) => {
+    if (!tweenRef.current) return;
+    const t = tweenRef.current;
+    let newTime = t.time() + dir * CARD_DURATION;
+    // Envolvemos dentro del rango para no salirnos del loop
+    if (newTime < 0) newTime += t.duration();
+    t.time(newTime);
+  };
 
   useGSAP(() => {
     const track = trackRef.current;
-    const tween = gsap.to(track, {
+    tweenRef.current = gsap.to(track, {
       xPercent: -50,
       ease: 'none',
       duration: 30,
       repeat: -1,
     });
 
-    const pause = () => tween.pause();
-    const play  = () => tween.play();
+    const pause = () => tweenRef.current.pause();
+    const play  = () => tweenRef.current.play();
 
     track.addEventListener('mouseenter', pause);
     track.addEventListener('mouseleave', play);
@@ -121,25 +135,50 @@ const DesktopGallery = () => {
   }, { scope: containerRef });
 
   return (
-    <div className="gallery-viewport" ref={containerRef}>
-      <div className="gallery-track" ref={trackRef}>
-        {[...projects, ...projects].map((project, index) => (
-          <div className="gallery-item" key={`${project.id}-${index}`}>
-            <div className="image-wrapper">
-              <img src={project.image} alt={project.title} className="gallery-image" />
-              <div className="gallery-overlay">
-                <div className="overlay-content">
-                  <h3 className="project-title">{project.title}</h3>
-                  <p className="project-desc">{project.description}</p>
+    <div className="desktop-gallery-wrapper" ref={containerRef}>
+
+      {/* Flecha izquierda */}
+      <button
+        className="desktop-arrow desktop-arrow--left"
+        onClick={() => skip(-1)}
+        id="gallery-prev"
+        aria-label="Proyecto anterior"
+      >
+        <ChevronLeft size={28} />
+      </button>
+
+      <div className="gallery-viewport">
+        <div className="gallery-track" ref={trackRef}>
+          {[...projects, ...projects].map((project, index) => (
+            <div className="gallery-item" key={`${project.id}-${index}`}>
+              <div className="image-wrapper">
+                <img src={project.image} alt={project.title} className="gallery-image" />
+                <div className="gallery-overlay">
+                  <div className="overlay-content">
+                    <h3 className="project-title">{project.title}</h3>
+                    <p className="project-desc">{project.description}</p>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
+
+      {/* Flecha derecha */}
+      <button
+        className="desktop-arrow desktop-arrow--right"
+        onClick={() => skip(1)}
+        id="gallery-next"
+        aria-label="Proyecto siguiente"
+      >
+        <ChevronRight size={28} />
+      </button>
+
     </div>
   );
 };
+
 
 // ── Componente principal ──────────────────────────────────────────────────────
 const HorizontalGallery = () => {
