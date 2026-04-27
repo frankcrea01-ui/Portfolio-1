@@ -1,0 +1,137 @@
+.contact-section {
+  min-height: 100vh;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Viñeta oscura central — el texto siempre legible, la red se ve en los bordes */
+.contact-section::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse 55% 60% at 50% 50%,
+    rgba(5, 5, 18, 0.82) 0%,
+    rgba(5, 5, 18, 0.50) 45%,
+    rgba(5, 5, 18, 0.0) 100%
+  );
+  z-index: 5;          /* encima del canvas (z:0) pero debajo del contenido (z:10) */
+  pointer-events: none;
+}
+
+/* El canvas de la galaxia vive en position:absolute dentro de .contact-section */
+
+.contact-container {
+  position: relative;        /* Encima del canvas (z-index heredado) */
+  z-index: 10;
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  padding: 4rem 2rem;
+}
+
+.contact-content {
+  max-width: 640px;
+}
+
+.contact-eyebrow {
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: #fbbf24;           /* Dorado — coincide con el núcleo de la galaxia */
+  margin-bottom: 1rem;
+}
+
+.contact-title {
+  font-size: clamp(2rem, 5vw, 3rem);
+  font-weight: 800;
+  line-height: 1.15;
+  color: var(--color-text);
+  margin-bottom: 1.25rem;
+}
+
+.contact-subtitle {
+  color: var(--color-text-muted);
+  font-size: 1.1rem;
+  line-height: 1.7;
+  margin-bottom: 2.5rem;
+}
+
+/* ── Botones ──────────────────────────────────────────────── */
+.contact-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+}
+
+/* WhatsApp */
+.btn-whatsapp {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  background-color: #25D366;
+  color: #fff;
+  padding: 1rem 2rem;
+  border-radius: 50px;
+  font-size: 1rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+  box-shadow: 0 8px 24px -4px rgba(37, 211, 102, 0.45);
+  white-space: nowrap;
+}
+
+.btn-whatsapp:hover,
+.btn-whatsapp:focus {
+  background-color: #1dba59;
+  transform: translateY(-4px);
+  box-shadow: 0 14px 30px -4px rgba(37, 211, 102, 0.55);
+  color: #fff;
+  outline: none;
+}
+
+/* Llamada */
+.btn-call {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  background-color: transparent;
+  color: var(--color-text);
+  padding: 1rem 2rem;
+  border-radius: 50px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  font-size: 1rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: border-color 0.3s ease, background-color 0.3s ease, transform 0.3s ease;
+  white-space: nowrap;
+  backdrop-filter: blur(8px);
+}
+
+.btn-call:hover,
+.btn-call:focus {
+  border-color: rgba(255, 255, 255, 0.7);
+  background-color: rgba(255, 255, 255, 0.08);
+  transform: translateY(-4px);
+  color: var(--color-text);
+  outline: none;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .contact-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .btn-whatsapp,
+  .btn-call {
+    justify-content: center;
+  }
+}
