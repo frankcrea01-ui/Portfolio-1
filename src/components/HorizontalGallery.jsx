@@ -20,15 +20,15 @@ function useIsMobile(breakpoint = 768) {
 
 // ── Componente Carousel Móvil ─────────────────────────────────────────────────
 const MobileCarousel = () => {
-  const [current, setCurrent]       = useState(0);
+  const [current, setCurrent] = useState(0);
   const [progressKey, setProgressKey] = useState(0); // cambiar la key reinicia la animación CSS
-  const [isPaused, setIsPaused]     = useState(false);
-  const touchStartX  = useRef(null);
+  const [isPaused, setIsPaused] = useState(false);
+  const touchStartX = useRef(null);
   const pauseTimerRef = useRef(null);
   const total = projects.length;
 
-  const AUTO_DELAY   = 4000; // ms entre cambios automáticos
-  const PAUSE_AFTER  = 6000; // ms de pausa tras interacción del usuario
+  const AUTO_DELAY = 4000; // ms entre cambios automáticos
+  const PAUSE_AFTER = 6000; // ms de pausa tras interacción del usuario
 
   // ── Función central de navegación ─────────────────────────────────────────
   const goTo = useCallback((newIdx, isUser = false) => {
@@ -61,7 +61,7 @@ const MobileCarousel = () => {
 
   // ── Swipe táctil ──────────────────────────────────────────────────────────
   const onTouchStart = (e) => { touchStartX.current = e.touches[0].clientX; };
-  const onTouchEnd   = (e) => {
+  const onTouchEnd = (e) => {
     if (touchStartX.current === null) return;
     const delta = touchStartX.current - e.changedTouches[0].clientX;
     if (Math.abs(delta) > 40) goTo(delta > 0 ? current + 1 : current - 1, true);
@@ -144,8 +144,8 @@ const MobileCarousel = () => {
 // ── Componente Galería Desktop (GSAP marquee + flechas) ──────────────────────
 const DesktopGallery = () => {
   const containerRef = useRef();
-  const trackRef     = useRef();
-  const tweenRef     = useRef(null);
+  const trackRef = useRef();
+  const tweenRef = useRef(null);
 
   // Duración equivalente a un card en el tween (4 cards duplicados = 8 items)
   const CARD_DURATION = 30 / (projects.length * 2);
@@ -170,7 +170,7 @@ const DesktopGallery = () => {
     });
 
     const pause = () => tweenRef.current.pause();
-    const play  = () => tweenRef.current.play();
+    const play = () => tweenRef.current.play();
 
     track.addEventListener('mouseenter', pause);
     track.addEventListener('mouseleave', play);
